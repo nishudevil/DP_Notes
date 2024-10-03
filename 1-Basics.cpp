@@ -59,3 +59,20 @@ SC -> Recursion Stack Space (path length) + dp[][]
 
 Recursion and Tabulation are in opposite direction=> (n-1 to 0) rec then (0 to n-1) is tab
 */
+
+// Cool Stuff: unordered_map<int, unordered_map<int,int>>mp; if(mp[s].count(k))return mp[s][k];
+
+// vector<string> split(string s){
+//         vector<string> res;
+//         int pos = 0;
+//         while(true){
+//             pos = s.find("/");
+//             if(pos==string::npos){
+//                 res.push_back(s);
+//                 break;
+//             } 
+//             res.push_back(s.substr(0,pos));
+//             s.erase(0,pos+1); 
+//         }
+//         return res;
+//     }

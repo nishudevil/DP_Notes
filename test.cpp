@@ -1,38 +1,60 @@
-class Solution {
-    public:
-        int dp[2001][2001];
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Recursive helper function to perform DFS and find the valid path
+bool dfs(const vector<vector<int>>& pyramid, int row, int col, int product, int target, string& path) {
+    // Multiply the current product with the current pyramid element
+    product *= pyramid[row][col];
     
-        int rec (int i, int j, string& s, string& p){
+    // If we have reached the last row
+    if (row == pyramid.size() - 1) {
+        return product == target;
+    }
     
-            if(i<0 && j<0){
-                return 1;
-            }
+    // Try going left (L)
+    path.push_back('L');
+    if (dfs(pyramid, row + 1, col, product, target, path)) {
+        return true;
+    }
+    path.pop_back();  // Backtrack if this path does not work
     
-            if(i<0 || j<0) return 0;
+    // Try going right (R)
+    path.push_back('R');
+    if (dfs(pyramid, row + 1, col + 1, product, target, path)) {
+        return true;
+    }
+    path.pop_back();  // Backtrack if this path does not work
     
-            if (p[j]!='?' && p[j]!='*' && s[i]!=p[j]) return 0;
-    
-    
-            if(p[j]=='?' || s[i]==p[j]) {
-                if(rec(i-1,j-1,s,p)) return dp[i][j]=1;
-                // this is for p[j]='*'
-                }else{
-                    for(int ind=0;ind<=i+1;ind++){
-                        if(rec(i-ind,j-1,s,p)) return dp[i][j]=1;
-                    }
-            }
-    
-    
-            return 0;
-    
-        }
-        bool isMatch(string s, string p) {
-            int m=s.size();
-            int n=p.size();
-    
-            memset(dp,-1,sizeof(dp));
-    
-            return (bool) rec(m-1,n-1,s,p);
-            
-        }
+    // If no valid path is found, return false
+    return false;
+}
+
+// Main function to find the path
+string findPath(const vector<vector<int>>& pyramid, int target) {
+    string path;
+    if (dfs(pyramid, 0, 0, 1, target, path)) {
+        return path;  // Return the valid path if found
+    }
+    return "No valid path found";  // Return this if no path is found
+}
+
+int main() {
+    // Sample pyramid and target
+    vector<vector<int>> pyramid = {
+        {2},
+        {4, 3},
+        {3, 2, 6},
+        {2, 9, 5, 2},
+        {10, 5, 2, 15, 5}
     };
+    int target = 720;
+
+    // Find and print the path
+    string path = findPath(pyramid, target);
+    cout << "Path: " << path << endl;
+
+    return 0;
+}
