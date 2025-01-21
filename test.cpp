@@ -1,60 +1,39 @@
-#include <iostream>
-#include <vector>
-#include <string>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-// Recursive helper function to perform DFS and find the valid path
-bool dfs(const vector<vector<int>>& pyramid, int row, int col, int product, int target, string& path) {
-    // Multiply the current product with the current pyramid element
-    product *= pyramid[row][col];
-    
-    // If we have reached the last row
-    if (row == pyramid.size() - 1) {
-        return product == target;
+void reverseLinesInFile(const string& inputFileName, const string& outputFileName) {
+    ifstream inputFile(inputFileName);
+    if (!inputFile.is_open()) {
+        cerr << "Error: Could not open input file: " << inputFileName << endl;
+        return;
     }
-    
-    // Try going left (L)
-    path.push_back('L');
-    if (dfs(pyramid, row + 1, col, product, target, path)) {
-        return true;
-    }
-    path.pop_back();  // Backtrack if this path does not work
-    
-    // Try going right (R)
-    path.push_back('R');
-    if (dfs(pyramid, row + 1, col + 1, product, target, path)) {
-        return true;
-    }
-    path.pop_back();  // Backtrack if this path does not work
-    
-    // If no valid path is found, return false
-    return false;
-}
 
-// Main function to find the path
-string findPath(const vector<vector<int>>& pyramid, int target) {
-    string path;
-    if (dfs(pyramid, 0, 0, 1, target, path)) {
-        return path;  // Return the valid path if found
+    // Open the output file for writing
+    ofstream outputFile(outputFileName);
+    if (!outputFile.is_open()) {
+        cerr << "Error: Could not open output file: " << outputFileName << endl;
+        inputFile.close();
+        return;
     }
-    return "No valid path found";  // Return this if no path is found
+
+    string line;
+    while (getline(inputFile, line)) {
+        reverse(line.begin(), line.end());
+        outputFile << line << '\n';
+    }
+
+    inputFile.close();
+    outputFile.close();
+
+    cout << "Reversed lines have been written to " << outputFileName << endl;
 }
 
 int main() {
-    // Sample pyramid and target
-    vector<vector<int>> pyramid = {
-        {2},
-        {4, 3},
-        {3, 2, 6},
-        {2, 9, 5, 2},
-        {10, 5, 2, 15, 5}
-    };
-    int target = 720;
+    const string inputFileName = "input.txt";
+    const string outputFileName = "output.txt";
 
-    // Find and print the path
-    string path = findPath(pyramid, target);
-    cout << "Path: " << path << endl;
+    // Process the file
+    reverseLinesInFile(inputFileName, outputFileName);
 
     return 0;
 }
